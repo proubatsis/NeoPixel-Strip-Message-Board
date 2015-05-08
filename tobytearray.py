@@ -1,3 +1,7 @@
+#Converts the contents of 'letters.txt' into an array
+#that can be used by the arduino program. The result
+#of the conversion is in the file 'array.txt'.
+
 f = open("letters.txt", "r")
 lines = f.readlines()
 

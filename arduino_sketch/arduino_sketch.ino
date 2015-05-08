@@ -8,6 +8,9 @@
 
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(WIDTH * HEIGHT, PIN, NEO_GRB + NEO_KHZ800);
 
+//Defines a "font" to display
+//Indices 0-25 = Letters A-Z
+//Index 26 = Space
 byte letters[27][7] = 
 {
 {12,18,33,127,65,65,65},
@@ -39,10 +42,13 @@ byte letters[27][7] =
 {0,0,0,0,0,0,0},
 };
 
-int stringLength = 26;
+//Settings for displaying the string
+int stringLength = 0;
 int globalOffset = 0;
 byte buffer[HEIGHT][512];
 
+//The string to display along with the color
+//and the delay (smaller delay = faster horizontal scrolling).
 String message = "HELLO WORLD ";
 int red = 0;
 int green = 255;
@@ -51,33 +57,37 @@ int delayTime = 100;
 
 void setup()
 {
+ //Initialize neo pixel strip
  strip.begin();
  strip.show(); 
  
- // Clear memory
+ //Clear memory
  for(int i = 0; i < HEIGHT; i++)
   for(int j = 0; j < 512; j++) buffer[i][j] = 0;
   
- //for(int i = 0; i < 26; i++) setLetter(letters[i], i * 8);
+ //Convert letters in the string to be displayed
  for (int i = 0; i < message.length(); i++)
  {
    if (message[i] == ' ')
      setLetter(letters[26], i * LETTER_SIZE);
    else setLetter(letters[message[i] - 65], i * LETTER_SIZE);
  }
+ 
  stringLength = message.length();
 }
 
 void loop()
 {  
- globalOffset++;
+ globalOffset++; //Scroll the text
  showBuffer(red, green, blue);
  delay(delayTime);
 }
 
+//Display the contents of the buffer based on the offset
 void showBuffer(int r, int g, int b)
 {
  strip.clear();
+ 
  for(int i = 0; i < HEIGHT; i++)
  {
    for(int j = 0; j < WIDTH; j++)
@@ -86,26 +96,37 @@ void showBuffer(int r, int g, int b)
     if(b == 1) setLED(i, j, r, g, b);
    }
  }
+ 
  strip.show();
 }
+
+//Place a letter in the buffer
 void setLetter(byte* letter, int offset)
 {
  for(int row = 0; row < HEIGHT; row++)
  {
   int rowData = letter[row]; 
+  
+  //A letter is defined by the bits in each number.
+  //A 0 bit means the light is off, while a 1 bit means
+  //that it is on.
   for(int i = 0; i < 7; i++)
   {
     byte b = bitRead(rowData, 7 - i - 1);
     buffer[row][i + offset] = b;
   }
+  
  } 
 }
 
+//Turn on an LED with a given color at a specified row and column
 void setLED(int row, int col, int r, int g, int b)
 {
  strip.setPixelColor(getIndex(row, col), strip.Color(r, g, b));
 }
 
+//Convert co-ordinates to an index since the grid
+//is made up of multiple connected neo pixel strips.
 int getIndex(int row, int col)
 {
  return row * WIDTH + col; 
