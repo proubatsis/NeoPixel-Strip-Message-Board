@@ -5,7 +5,13 @@ letters byte array.
 
 The text that is displayed scrolls from right to left.
 
+#Library
+https://github.com/adafruit/Adafruit_NeoPixel
+
 #Pictures
 ![Hello](/example_pictures/hello.png?raw=true)
 ![Transition](/example_pictures/transition.png?raw=true)
 ![World](/example_pictures/world.png?raw=true)
+
+#License
+MIT
