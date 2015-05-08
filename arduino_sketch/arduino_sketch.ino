@@ -44,10 +44,10 @@ int globalOffset = 0;
 byte buffer[HEIGHT][512];
 
 String message = "HELLO WORLD ";
-int red = 255;
-int green = 0;
+int red = 0;
+int green = 255;
 int blue = 0;
-int delayTime = 25;
+int delayTime = 100;
 
 void setup()
 {
